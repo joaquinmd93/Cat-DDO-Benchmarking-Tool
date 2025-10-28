@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRM Institutional Benchmarking Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-blue-900 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold">DRM Institutional Benchmarking Tool</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="hover:text-blue-200">Home</a>
+                    <a href="/admin" class="hover:text-blue-200">Admin</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">
+                Disaster Risk Management Institutional Benchmarking
+            </h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Assess and benchmark DRM institutional frameworks using the World Bank's six-pillar approach
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="text-blue-600 text-3xl mb-2">📋</div>
+                <h3 class="text-lg font-semibold mb-2">Six DRM Pillars</h3>
+                <p class="text-gray-600">Comprehensive assessment across Legal Framework, Risk ID, Risk Reduction, Preparedness, Financial Protection, and Resilient Reconstruction</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="text-green-600 text-3xl mb-2">📊</div>
+                <h3 class="text-lg font-semibold mb-2">Maturity Levels</h3>
+                <p class="text-gray-600">Track progress through four stages: Nascent, Emerging, Established, and Advanced</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="text-purple-600 text-3xl mb-2">🔄</div>
+                <h3 class="text-lg font-semibold mb-2">Stakeholder Feedback</h3>
+                <p class="text-gray-600">Collect and review feedback from government, civil society, and development partners</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+            <h3 class="text-2xl font-bold mb-6">Available Countries</h3>
+            <div id="countries-list" class="space-y-4">
+                <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
+                    <div>
+                        <h4 class="font-semibold text-lg">Angola (AGO)</h4>
+                        <p class="text-gray-600">Sub-Saharan Africa</p>
+                    </div>
+                    <a href="/countries/AGO" 
+                       class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                        View Assessment
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-blue-50 border-l-4 border-blue-600 p-6 rounded">
+            <h4 class="font-semibold text-blue-900 mb-2">About This Tool</h4>
+            <p class="text-blue-800">
+                This prototype demonstrates a DRM benchmarking system based on the World Bank's framework 
+                described in "Driving Policy Reform for Disaster Resilience: Lessons from World Bank DPF Cat DDOs (2025)". 
+                The tool provides a methodology for assessing DRM governance through policy typology, benchmarking indicators, 
+                and maturity levels to support assessment, reform guidance, and iterative improvement.
+            </p>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-16 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p>World Bank DRM Institutional Benchmarking Tool - Prototype v0.1</p>
+            <p class="text-gray-400 text-sm mt-2">For internal demonstration purposes only</p>
+        </div>
+    </footer>
+</body>
+</html>

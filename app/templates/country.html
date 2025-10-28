@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ country.name }} - DRM Assessment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-blue-900 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-xl font-bold hover:text-blue-200">DRM Benchmarking Tool</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-blue-200">{{ country.name }} ({{ country.iso_code }})</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ country.name }}</h1>
+            <p class="text-xl text-gray-600">{{ country.region }}</p>
+            <div class="mt-4 flex items-center space-x-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                    Assessment v{{ assessment.version }}
+                </span>
+                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                    Overall: {{ assessment.overall_maturity }} ({{ assessment.overall_score|round(1) }})
+                </span>
+                <a href="/api/countries/{{ country.iso_code }}/export" 
+                   class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    Export JSON ↓
+                </a>
+            </div>
+        </div>
+
+        <!-- Radar Chart -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-2xl font-bold mb-6">DRM Pillar Scores</h2>
+            <div class="max-w-2xl mx-auto">
+                <canvas id="radarChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Pillar Cards -->
+        <div class="space-y-6">
+            <h2 class="text-2xl font-bold">Pillar Assessments</h2>
+            
+            {% for pillar in pillars %}
+            <div class="bg-white rounded-lg shadow-md overflow-hidden" x-data="{ open: false }">
+                <div class="p-6">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <h3 class="text-xl font-bold text-gray-900">{{ pillar.name }}</h3>
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                                    {% if pillar.score >= 66 %}bg-green-100 text-green-800
+                                    {% elif pillar.score >= 33 %}bg-yellow-100 text-yellow-800
+                                    {% else %}bg-red-100 text-red-800{% endif %}">
+                                    {{ pillar.maturity }} ({{ pillar.score|round(0)|int }})
+                                </span>
+                            </div>
+                            <p class="text-gray-700 mb-4">{{ pillar.rationale }}</p>
+                            
+                            <!-- Toggle Indicators Button -->
+                            <button @click="open = !open" 
+                                    class="text-blue-600 hover:text-blue-800 font-medium text-sm">
+                                <span x-show="!open">▶ Show Indicators</span>
+                                <span x-show="open">▼ Hide Indicators</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Indicators (Expandable) -->
+                    <div x-show="open" x-collapse class="mt-6 space-y-4 border-t pt-4">
+                        {% if pillar.key in indicators_by_pillar %}
+                            {% for indicator in indicators_by_pillar[pillar.key] %}
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <div class="flex items-start justify-between mb-2">
+                                    <h4 class="font-semibold text-gray-900">{{ indicator.indicator_name }}</h4>
+                                    <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium
+                                        {% if indicator.maturity_level == 'Advanced' %}bg-green-100 text-green-800
+                                        {% elif indicator.maturity_level == 'Established' %}bg-blue-100 text-blue-800
+                                        {% elif indicator.maturity_level == 'Emerging' %}bg-yellow-100 text-yellow-800
+                                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                        {{ indicator.maturity_level }}
+                                    </span>
+                                </div>
+                                <p class="text-gray-700 text-sm mb-2">{{ indicator.explanation }}</p>
+                                {% if indicator.evidence_excerpt %}
+                                <div class="bg-white border-l-4 border-blue-500 p-3 text-sm">
+                                    <p class="text-gray-600 italic">"{{ indicator.evidence_excerpt }}"</p>
+                                    {% if indicator.evidence_link %}
+                                    <a href="/uploads/{{ indicator.evidence_link }}" 
+                                       class="text-blue-600 hover:underline text-xs mt-1 inline-block">
+                                        📄 View Evidence
+                                    </a>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Feedback Form -->
+                    <div class="mt-4 pt-4 border-t">
+                        <div x-data="feedbackForm('{{ assessment.id }}', '{{ pillar.key }}')">
+                            <button @click="showForm = !showForm" 
+                                    class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                                💬 Provide Feedback
+                            </button>
+                            
+                            <div x-show="showForm" x-collapse class="mt-4 bg-blue-50 p-4 rounded-lg">
+                                <form @submit.prevent="submitFeedback">
+                                    <textarea x-model="feedbackText" 
+                                              placeholder="Share your feedback on this pillar assessment..."
+                                              class="w-full border border-gray-300 rounded-lg p-3 text-sm"
+                                              rows="3" required></textarea>
+                                    <div class="grid grid-cols-2 gap-3 mt-3">
+                                        <input type="text" x-model="stakeholderName" 
+                                               placeholder="Your name (optional)"
+                                               class="border border-gray-300 rounded-lg p-2 text-sm">
+                                        <input type="email" x-model="stakeholderEmail" 
+                                               placeholder="Your email (optional)"
+                                               class="border border-gray-300 rounded-lg p-2 text-sm">
+                                    </div>
+                                    <div class="flex items-center justify-between mt-3">
+                                        <span x-show="success" class="text-green-600 text-sm">✓ Feedback submitted!</span>
+                                        <span x-show="error" class="text-red-600 text-sm">Error submitting feedback</span>
+                                        <button type="submit" 
+                                                class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">
+                                            Submit Feedback
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <script>
+        // Radar Chart
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        const pillarData = {{ pillars|tojson }};
+        
+        const chart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: pillarData.map(p => p.name.replace(' & ', '\n& ')),
+                datasets: [{
+                    label: '{{ country.name }} DRM Score',
+                    data: pillarData.map(p => p.score),
+                    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                    borderColor: 'rgb(59, 130, 246)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgb(59, 130, 246)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgb(59, 130, 246)'
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            stepSize: 25
+                        },
+                        pointLabels: {
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const pillar = pillarData[context.dataIndex];
+                                return `${pillar.maturity}: ${pillar.score}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Feedback form Alpine.js component
+        function feedbackForm(assessmentId, pillarKey) {
+            return {
+                showForm: false,
+                feedbackText: '',
+                stakeholderName: '',
+                stakeholderEmail: '',
+                success: false,
+                error: false,
+                async submitFeedback() {
+                    try {
+                        const response = await fetch(`/api/assessments/${assessmentId}/feedback`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                pillar_key: pillarKey,
+                                feedback_text: this.feedbackText,
+                                stakeholder_name: this.stakeholderName || null,
+                                stakeholder_email: this.stakeholderEmail || null
+                            })
+                        });
+                        
+                        if (response.ok) {
+                            this.success = true;
+                            this.error = false;
+                            this.feedbackText = '';
+                            this.stakeholderName = '';
+                            this.stakeholderEmail = '';
+                            setTimeout(() => {
+                                this.success = false;
+                                this.showForm = false;
+                            }, 2000);
+                        } else {
+                            this.error = true;
+                        }
+                    } catch (e) {
+                        this.error = true;
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

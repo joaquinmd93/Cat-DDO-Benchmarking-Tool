@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - DRM Benchmarking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-blue-900 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-xl font-bold hover:text-blue-200">DRM Benchmarking Tool</a>
+                    <span class="ml-4 text-blue-200">/ Admin Dashboard</span>
+                </div>
+                <div class="flex items-center" x-data="{ loggedIn: localStorage.getItem('admin_token') !== null }">
+                    <span x-show="loggedIn" class="text-blue-200 mr-4">Admin</span>
+                    <button x-show="loggedIn" @click="logout()" 
+                            class="bg-blue-700 px-4 py-2 rounded hover:bg-blue-600">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" 
+          x-data="adminDashboard()" 
+          x-init="init()">
+        
+        <!-- Login Form -->
+        <div x-show="!loggedIn" class="max-w-md mx-auto mt-16">
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <h2 class="text-2xl font-bold mb-6">Admin Login</h2>
+                <form @submit.prevent="login">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Email</label>
+                        <input type="email" x-model="credentials.email" required
+                               class="w-full border border-gray-300 rounded-lg p-3">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">Password</label>
+                        <input type="password" x-model="credentials.password" required
+                               class="w-full border border-gray-300 rounded-lg p-3">
+                    </div>
+                    <div x-show="loginError" class="mb-4 text-red-600 text-sm">
+                        Invalid credentials. Try: admin@worldbank.org / demo-password-change-me
+                    </div>
+                    <button type="submit" 
+                            class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 font-medium">
+                        Login
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div x-show="loggedIn">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+                <p class="text-gray-600 mt-2">Manage feedback and assessments</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-gray-500 text-sm font-medium">Total Feedback</div>
+                    <div class="text-3xl font-bold text-gray-900 mt-2" x-text="feedback.length"></div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-gray-500 text-sm font-medium">Open</div>
+                    <div class="text-3xl font-bold text-blue-600 mt-2" 
+                         x-text="feedback.filter(f => f.status === 'open').length"></div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-gray-500 text-sm font-medium">Triaged</div>
+                    <div class="text-3xl font-bold text-yellow-600 mt-2" 
+                         x-text="feedback.filter(f => f.status === 'triaged').length"></div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="text-gray-500 text-sm font-medium">Accepted</div>
+                    <div class="text-3xl font-bold text-green-600 mt-2" 
+                         x-text="feedback.filter(f => f.status === 'accepted').length"></div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                <div class="flex items-center space-x-4">
+                    <label class="text-gray-700 font-medium">Filter by status:</label>
+                    <select x-model="statusFilter" @change="loadFeedback()" 
+                            class="border border-gray-300 rounded-lg px-4 py-2">
+                        <option value="">All</option>
+                        <option value="open">Open</option>
+                        <option value="triaged">Triaged</option>
+                        <option value="accepted">Accepted</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+                    <button @click="loadFeedback()" 
+                            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Feedback List -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-xl font-bold">Feedback Items</h2>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    <template x-for="item in feedback" :key="item.id">
+                        <div class="p-6 hover:bg-gray-50">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-3 mb-2">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                                              :class="{
+                                                  'bg-blue-100 text-blue-800': item.status === 'open',
+                                                  'bg-yellow-100 text-yellow-800': item.status === 'triaged',
+                                                  'bg-green-100 text-green-800': item.status === 'accepted',
+                                                  'bg-red-100 text-red-800': item.status === 'rejected'
+                                              }"
+                                              x-text="item.status.toUpperCase()"></span>
+                                        <span class="text-sm text-gray-500" x-text="item.pillar_key || 'General'"></span>
+                                    </div>
+                                    <p class="text-gray-900 mb-2" x-text="item.feedback_text"></p>
+                                    <div class="text-sm text-gray-600">
+                                        <span x-show="item.stakeholder_name" x-text="item.stakeholder_name"></span>
+                                        <span x-show="item.stakeholder_email" x-text="' (' + item.stakeholder_email + ')'"></span>
+                                        <span class="mx-2">•</span>
+                                        <span x-text="new Date(item.created_at).toLocaleDateString()"></span>
+                                    </div>
+                                    <div x-show="item.admin_response" class="mt-3 bg-blue-50 p-3 rounded">
+                                        <div class="text-xs text-blue-600 font-medium mb-1">Admin Response:</div>
+                                        <p class="text-sm text-gray-700" x-text="item.admin_response"></p>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <button @click="selectedFeedback = item; showUpdateModal = true" 
+                                            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-sm">
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <div x-show="feedback.length === 0" class="p-6 text-center text-gray-500">
+                        No feedback items found
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Update Feedback Modal -->
+        <div x-show="showUpdateModal" 
+             class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+             @click.self="showUpdateModal = false">
+            <div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6" @click.stop>
+                <h3 class="text-xl font-bold mb-4">Update Feedback Status</h3>
+                <form @submit.prevent="updateFeedback">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Status</label>
+                        <select x-model="updateData.status" required
+                                class="w-full border border-gray-300 rounded-lg p-3">
+                            <option value="open">Open</option>
+                            <option value="triaged">Triaged</option>
+                            <option value="accepted">Accepted</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">Admin Response (optional)</label>
+                        <textarea x-model="updateData.admin_response" 
+                                  class="w-full border border-gray-300 rounded-lg p-3" 
+                                  rows="3"></textarea>
+                    </div>
+                    <div class="flex space-x-3">
+                        <button type="submit" 
+                                class="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+                            Save Changes
+                        </button>
+                        <button type="button" @click="showUpdateModal = false" 
+                                class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function adminDashboard() {
+            return {
+                loggedIn: false,
+                credentials: { email: '', password: '' },
+                loginError: false,
+                feedback: [],
+                statusFilter: '',
+                showUpdateModal: false,
+                selectedFeedback: null,
+                updateData: { status: 'open', admin_response: '' },
+
+                init() {
+                    this.loggedIn = localStorage.getItem('admin_token') !== null;
+                    if (this.loggedIn) {
+                        this.loadFeedback();
+                    }
+                },
+
+                async login() {
+                    try {
+                        const response = await fetch('/api/admin/login', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(this.credentials)
+                        });
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            localStorage.setItem('admin_token', data.access_token);
+                            this.loggedIn = true;
+                            this.loginError = false;
+                            await this.loadFeedback();
+                        } else {
+                            this.loginError = true;
+                        }
+                    } catch (e) {
+                        this.loginError = true;
+                    }
+                },
+
+                logout() {
+                    localStorage.removeItem('admin_token');
+                    this.loggedIn = false;
+                    this.feedback = [];
+                },
+
+                async loadFeedback() {
+                    const token = localStorage.getItem('admin_token');
+                    if (!token) return;
+
+                    try {
+                        const url = this.statusFilter 
+                            ? `/api/admin/feedback?status_filter=${this.statusFilter}`
+                            : '/api/admin/feedback';
+
+                        const response = await fetch(url, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+
+                        if (response.ok) {
+                            this.feedback = await response.json();
+                        }
+                    } catch (e) {
+                        console.error('Error loading feedback:', e);
+                    }
+                },
+
+                async updateFeedback() {
+                    const token = localStorage.getItem('admin_token');
+                    if (!token || !this.selectedFeedback) return;
+
+                    try {
+                        const response = await fetch(`/api/admin/feedback/${this.selectedFeedback.id}`, {
+                            method: 'PATCH',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${token}`
+                            },
+                            body: JSON.stringify(this.updateData)
+                        });
+
+                        if (response.ok) {
+                            this.showUpdateModal = false;
+                            await this.loadFeedback();
+                            this.updateData = { status: 'open', admin_response: '' };
+                        }
+                    } catch (e) {
+                        console.error('Error updating feedback:', e);
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

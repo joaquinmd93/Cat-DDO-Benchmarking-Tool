@@ -1,0 +1,169 @@
+{
+  "country": {
+    "iso_code": "AGO",
+    "name": "Angola",
+    "region": "Sub-Saharan Africa"
+  },
+  "assessment": {
+    "version": "v1",
+    "created_by": "seed_admin",
+    "created_at": "2025-10-28T00:00:00Z",
+    "is_published": true,
+    "overall_score": 38.5,
+    "overall_maturity": "Emerging",
+    "pillars": [
+      {
+        "pillar_key": "legal",
+        "pillar_name": "Legal & Institutional Framework",
+        "score": 66,
+        "maturity_level": "Established",
+        "rationale": "Updated DRM law in 2019; clear roles for ministry and decentralized units but limited enforcement capacity."
+      },
+      {
+        "pillar_key": "risk_id",
+        "pillar_name": "Risk Identification",
+        "score": 33,
+        "maturity_level": "Emerging",
+        "rationale": "National hazard mapping exists but is incomplete and not regularly updated."
+      },
+      {
+        "pillar_key": "risk_red",
+        "pillar_name": "Risk Reduction",
+        "score": 33,
+        "maturity_level": "Emerging",
+        "rationale": "Coastal and urban risk-reduction projects exist but lack national standards."
+      },
+      {
+        "pillar_key": "prep",
+        "pillar_name": "Preparedness",
+        "score": 66,
+        "maturity_level": "Established",
+        "rationale": "Functional national emergency operations center; subnational preparedness uneven."
+      },
+      {
+        "pillar_key": "fin_prot",
+        "pillar_name": "Financial Protection",
+        "score": 0,
+        "maturity_level": "Nascent",
+        "rationale": "No dedicated sovereign financial protection instrument or contingency lines."
+      },
+      {
+        "pillar_key": "recon",
+        "pillar_name": "Resilient Reconstruction",
+        "score": 33,
+        "maturity_level": "Emerging",
+        "rationale": "Reconstruction guidelines drafted but not yet adopted into procurement rules."
+      }
+    ],
+    "indicators": [
+      {
+        "pillar_key": "legal",
+        "indicator_key": "legal_drm_law",
+        "indicator_name": "National DRM/DRR law with defined institutional mandates",
+        "maturity_level": "Established",
+        "explanation": "A comprehensive DRM law was passed in 2019 (Presidential Decree No. 26/19) establishing clear mandates for national and municipal disaster management authorities. The law defines roles for the National Civil Protection and Fire Service (SNPCB) and coordinates with sectoral ministries.",
+        "evidence_excerpt": "Presidential Decree No. 26/19 establishes mandates for DRM coordination across government levels.",
+        "evidence_link": "seed_data/angola/legal_law_2019.pdf"
+      },
+      {
+        "pillar_key": "legal",
+        "indicator_key": "legal_drm_strategy",
+        "indicator_name": "National DRM/DRR strategy or policy document in place",
+        "maturity_level": "Established",
+        "explanation": "The National Disaster Risk Reduction Strategy (2020-2030) was adopted and includes targets aligned with the Sendai Framework. Implementation has begun in pilot provinces but nationwide rollout is incomplete.",
+        "evidence_excerpt": "National Strategy 2020-2030 aligns with Sendai Framework priorities and includes M&E indicators.",
+        "evidence_link": "seed_data/angola/drm_strategy_2020.pdf"
+      },
+      {
+        "pillar_key": "risk_id",
+        "indicator_key": "risk_id_hazard_mapping",
+        "indicator_name": "Systems for recording historical disaster impacts and hazard mapping",
+        "maturity_level": "Emerging",
+        "explanation": "Angola developed flood hazard maps for major river basins in 2018 through a World Bank project. However, maps do not yet cover drought, coastal erosion, or all provinces. A national disaster loss database was initiated but lacks consistent data entry protocols.",
+        "evidence_excerpt": "Flood hazard mapping completed for Cunene and Kwanza basins covering approximately 40% of territory.",
+        "evidence_link": "seed_data/angola/hazard_map_2018.pdf"
+      },
+      {
+        "pillar_key": "risk_id",
+        "indicator_key": "risk_id_public_access",
+        "indicator_name": "Public accessibility of risk information and data platforms",
+        "maturity_level": "Nascent",
+        "explanation": "Risk data is maintained by SNPCB but is not publicly accessible. No open data platform exists; stakeholders must request information through official channels with variable response times.",
+        "evidence_excerpt": "Risk information managed internally; formal requests required for external access.",
+        "evidence_link": "seed_data/angola/data_access_policy.pdf"
+      },
+      {
+        "pillar_key": "risk_red",
+        "indicator_key": "risk_red_land_use",
+        "indicator_name": "Integration of DRM into land-use planning and urban development",
+        "maturity_level": "Emerging",
+        "explanation": "Urban master plans for Luanda and Benguela include flood risk zones and building restrictions in high-risk areas. However, enforcement is weak and informal settlements continue to expand in restricted zones.",
+        "evidence_excerpt": "Luanda Master Plan 2019 designates flood-prone areas; enforcement mechanisms under development.",
+        "evidence_link": "seed_data/angola/luanda_master_plan.pdf"
+      },
+      {
+        "pillar_key": "risk_red",
+        "indicator_key": "risk_red_public_investment",
+        "indicator_name": "Disaster/climate risk integration in National Public Investment System",
+        "maturity_level": "Emerging",
+        "explanation": "The Public Investment Manual was updated in 2021 to include risk screening guidelines for infrastructure projects exceeding $10 million. Application is inconsistent across ministries and lacks dedicated technical capacity for risk assessment.",
+        "evidence_excerpt": "Public Investment Manual 2021 requires risk screening for projects over $10M threshold.",
+        "evidence_link": "seed_data/angola/investment_manual_2021.pdf"
+      },
+      {
+        "pillar_key": "prep",
+        "indicator_key": "prep_early_warning",
+        "indicator_name": "Early warning systems for forecasting and dissemination",
+        "maturity_level": "Established",
+        "explanation": "The National Institute of Meteorology (INAMET) operates weather stations and issues flood forecasts during rainy season. SMS-based early warning reaches approximately 60% of at-risk communities. Integration with community-level response protocols is improving.",
+        "evidence_excerpt": "INAMET early warning system operational with 60% coverage of at-risk populations via SMS alerts.",
+        "evidence_link": "seed_data/angola/early_warning_system.pdf"
+      },
+      {
+        "pillar_key": "prep",
+        "indicator_key": "prep_contingency_plans",
+        "indicator_name": "Emergency preparedness and response plans with multi-level coordination",
+        "maturity_level": "Established",
+        "explanation": "National contingency plans exist and are activated annually during flood season. Provincial civil protection commissions coordinate with national level. Regular simulation exercises conducted in 8 of 18 provinces.",
+        "evidence_excerpt": "National contingency plan activated annually; provincial coordination through civil protection commissions.",
+        "evidence_link": "seed_data/angola/contingency_plan_2024.pdf"
+      },
+      {
+        "pillar_key": "fin_prot",
+        "indicator_key": "fin_prot_fiscal_risk",
+        "indicator_name": "Assessment of contingent liabilities and fiscal exposure to disasters",
+        "maturity_level": "Nascent",
+        "explanation": "No comprehensive fiscal risk assessment for disasters has been conducted. The Ministry of Finance does not systematically track disaster-related expenditures or model potential fiscal impacts of major disaster scenarios.",
+        "evidence_excerpt": "Disaster fiscal risk assessment not conducted; contingent liabilities not quantified systematically.",
+        "evidence_link": "seed_data/angola/fiscal_risk_note.pdf"
+      },
+      {
+        "pillar_key": "fin_prot",
+        "indicator_key": "fin_prot_drf_strategy",
+        "indicator_name": "Disaster Risk Financing strategy backed by legal framework",
+        "maturity_level": "Nascent",
+        "explanation": "Angola does not have a formal DRF strategy. Emergency response is funded through ad-hoc budget reallocations. Discussions are underway with development partners to develop a layered financing approach.",
+        "evidence_excerpt": "No DRF strategy in place; emergency funding via ad-hoc reallocations from national budget.",
+        "evidence_link": "seed_data/angola/budget_emergency_2024.pdf"
+      },
+      {
+        "pillar_key": "recon",
+        "indicator_key": "recon_framework",
+        "indicator_name": "Post-disaster recovery and reconstruction framework",
+        "maturity_level": "Emerging",
+        "explanation": "Reconstruction guidelines were drafted in 2022 following major floods. Guidelines include 'build back better' principles but have not been formally adopted into government procurement rules or budgeting processes.",
+        "evidence_excerpt": "Draft reconstruction guidelines (2022) include resilience principles; adoption into procurement pending.",
+        "evidence_link": "seed_data/angola/reconstruction_guidelines_2022.pdf"
+      },
+      {
+        "pillar_key": "recon",
+        "indicator_key": "recon_pdna",
+        "indicator_name": "Post-Disaster Needs Assessment tools and methodology",
+        "maturity_level": "Emerging",
+        "explanation": "Angola participated in PDNA training in 2020 and conducted a pilot assessment after 2021 floods in Cunene Province. The PDNA methodology is recognized but not yet institutionalized as standard practice for all disasters.",
+        "evidence_excerpt": "PDNA pilot completed for 2021 Cunene floods; methodology recognized but not institutionalized.",
+        "evidence_link": "seed_data/angola/pdna_cunene_2021.pdf"
+      }
+    ]
+  }
+}
